@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Responsive Navigation Bar — Pure HTML & CSS</title>
+
+  <style>
+    /* =========================
+       Design tokens & globals
+       ========================= */
+    :root{
+      --bg: #0f1724;           /* navbar background */
+      --panel: #0b1220;        /* mobile panel */
+      --muted: #9aa4b2;        /* secondary text */
+      --accent: #60a5fa;       /* accent (links hover) */
+      --text: #e6eef8;         /* primary text */
+      --glass: rgba(255,255,255,0.03);
+      --radius: 12px;
+      --gap: 1.25rem;
+      --nav-height: 68px;
+      --max-mobile-menu-height: 420px; /* works for 4-6 links */
+      --transition: 260ms cubic-bezier(.2,.9,.3,1);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Reset & base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#071026 0%, #071124 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+      font-size:16px;
+      padding-top: calc(var(--nav-height)); /* avoid content under sticky nav */
+    }
+
+    /* =========================
+       Navbar layout
+       ========================= */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 calc(var(--gap));
+      backdrop-filter: blur(6px);
+      background: linear-gradient(180deg, rgba(11,17,30,0.85), rgba(10,14,22,0.7));
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .nav__inner{
+      width:100%;
+      max-width:1200px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:var(--gap);
+    }
+
+    /* Brand */
+    .nav__brand{
+      display:flex;
+      align-items:center;
+      gap:0.6rem;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:600;
+      letter-spacing: -0.01em;
+      white-space:nowrap;
+    }
+    .nav__logo{
+      width:40px;
+      height:40px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:10px;
+      background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(96,165,250,0.06));
+      box-shadow: 0 6px 18px rgba(2,6,23,0.5), inset 0 -2px 6px rgba(255,255,255,0.02);
+      font-weight:700;
+      color:var(--accent);
+      font-size:16px;
+    }
+    .nav__brand-sub{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:500;
+      margin-top:2px;
+    }
+
+    /* Desktop links */
+    .nav__links {
+      display:flex;
+      gap:1.25rem;
+      align-items:center;
+    }
+    .nav__links a{
+      text-decoration:none;
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:8px;
+      font-weight:600;
+      font-size:15px;
+      white-space:nowrap; /* prevent wrapping */
+      transition: color var(--transition), background var(--transition), transform var(--transition);
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+    }
+    .nav__links a:hover,
+    .nav__links a:focus{
+      color:var(--text);
+      background: var(--glass);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .nav__links a.active{
+      color:var(--accent);
+      background: linear-gradient(90deg, rgba(96,165,250,0.06), rgba(96,165,250,0.02));
+    }
+
+    /* CTA (example right-most) */
+    .nav__cta{
+      background: linear-gradient(90deg,var(--accent), #4f46e5);
+      color: white;
+      padding:8px 12px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:14px;
+      box-shadow: 0 8px 20px rgba(96,165,250,0.08);
+    }
+    .nav__cta:hover{ filter:brightness(.98); transform:translateY(-2px) }
+
+    /* Mobile toggle (hamburger) */
+    .nav__toggle{
+      display:none; /* hidden on desktop */
+      background:transparent;
+      border:0;
+      padding:8px;
+      border-radius:8px;
+      cursor:pointer;
+      color:var(--muted);
+      transition: transform var(--transition), color var(--transition), background var(--transition);
+    }
+    .nav__toggle:focus{
+      outline:2px solid rgba(96,165,250,0.14);
+      outline-offset:4px;
+    }
+
+    /* Mobile menu — hidden by default */
+    .nav__menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(var(--nav-height));
+      background: linear-gradient(180deg, var(--panel), rgba(6,10,18,0.98));
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height var(--transition), box-shadow var(--transition);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+      border-top: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .nav__menu-inner{
+      padding: 0.75rem calc(var(--gap));
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .nav__menu a{
+      display:flex;
+      align-items:center;
+      gap:0.75rem;
+      padding:12px 10px;
+      text-decoration:none;
+      color:var(--text);
+      border-radius:8px;
+      font-weight:600;
+      white-space:nowrap;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .nav__menu a:hover,
+    .nav__menu a:focus{
+      background: rgba(255,255,255,0.02);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    /* When open */
+    .nav__menu.is-open{
+      max-height: var(--max-mobile-menu-height);
+    }
+    .nav__toggle.is-open{ color:var(--accent) }
+
+    /* =========================
+       Responsive breakpoints
+       ========================= */
+    @media (max-width: 880px) {
+      .nav__links { display:none }      /* hide desktop links */
+      .nav__toggle{ display:inline-flex } /* show hamburger */
+      .nav__brand-sub{ display:none }   /* optional compact brand */
+    }
+
+    /* Larger screens spacing tweak */
+    @media (min-width: 881px) {
+      .nav__menu{ display:none } /* mobile menu not used on desktop */
+    }
+
+    /* Accessibility & focus-visible improvements */
+    a:focus{ outline: 2px solid rgba(96,165,250,0.14); outline-offset:4px }
+
+    /* Small visual polish for very small screens */
+    @media (max-width:420px){
+      :root{ --gap: 0.9rem }
+      .nav__logo{ width:36px; height:36px; font-size:15px }
+      .nav__brand{ font-size:15px }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" role="navigation" aria-label="Primary">
+    <div class="nav__inner">
+
+      <!-- Brand -->
+      <a href="#" class="nav__brand" aria-label="Homepage">
+        <span class="nav__logo" aria-hidden="true">FT</span>
+        <div>
+          <span style="display:block">Frontier</span>
+          <small class="nav__brand-sub">Design & UI</small>
+        </div>
+      </a>
+
+      <!-- Desktop links (visible >= 881px) -->
+      <div class="nav__links" aria-hidden="false">
+        <a href="#" class="nav__link active">Home</a>
+        <a href="#" class="nav__link">Features</a>
+        <a href="#" class="nav__link">Pricing</a>
+        <a href="#" class="nav__link">Docs</a>
+        <a href="#" class="nav__link">Company</a>
+
+        <!-- Example CTA -->
+        <a href="#" class="nav__cta">Get Started</a>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button
+        class="nav__toggle"
+        id="navToggle"
+        aria-controls="primaryMobileMenu"
+        aria-expanded="false"
+        aria-label="Toggle menu"
+      >
+        <!-- Accessible hamburger icon (SVG) -->
+        <svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect class="ham-line top" x="0" y="0" width="22" height="2" rx="1"></rect>
+          <rect class="ham-line middle" x="0" y="6" width="22" height="2" rx="1"></rect>
+          <rect class="ham-line bottom" x="0" y="12" width="22" height="2" rx="1"></rect>
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile menu (collapsible) -->
+    <div id="primaryMobileMenu" class="nav__menu" aria-hidden="true">
+      <div class="nav__menu-inner">
+        <a href="#" class="nav__menu-link">Home</a>
+        <a href="#" class="nav__menu-link">Features</a>
+        <a href="#" class="nav__menu-link">Pricing</a>
+        <a href="#" class="nav__menu-link">Docs</a>
+        <a href="#" class="nav__menu-link">Company</a>
+        <a href="#" class="nav__menu-link nav__cta" style="justify-content:center; margin-top:8px;">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Demo page content -->
+  <main style="max-width:1100px; margin:2rem auto; padding:0 1rem; color:var(--muted);">
+    <h1 style="color:var(--text); font-size:28px; margin:0 0 0.5rem 0;">Page Content</h1>
+    <p>
+      This is demo content placed below the sticky navigation bar. Resize the browser to see the responsive
+      behavior: inline horizontal menu on desktop, collapsed hamburger-triggered menu on mobile.
+    </p>
+
+    <section style="margin-top:2rem; display:grid; gap:1rem;">
+      <div style="background:rgba(255,255,255,0.02); padding:1rem; border-radius:10px;">
+        <strong>Tip:</strong> The mobile menu uses a max-height transition for a smooth open/close. Links use
+        <code>white-space:nowrap</code> to prevent broken wrapping on narrow screens.
+      </div>
+      <div style="height:800px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); padding:1rem;">
+        Scroll to see sticky top nav in action.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Minimal, accessible toggle — only JS included to manage aria attributes & class toggling.
+    (function(){
+      const toggle = document.getElementById('navToggle');
+      const menu = document.getElementById('primaryMobileMenu');
+
+      if(!toggle || !menu) return;
+
+      function setOpen(isOpen){
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        menu.classList.toggle('is-open', isOpen);
+        menu.setAttribute('aria-hidden', String(!isOpen));
+        toggle.classList.toggle('is-open', isOpen);
+      }
+
+      // Toggle on click
+      toggle.addEventListener('click', () => {
+        const nowOpen = toggle.getAttribute('aria-expanded') === 'true' ? false : true;
+        setOpen(nowOpen);
+      });
+
+      // Close menu when focus moves outside (accessibility nicety)
+      document.addEventListener('click', (e) => {
+        const withinNav = e.target.closest('.nav');
+        if (!withinNav && toggle.getAttribute('aria-expanded') === 'true') {
+          setOpen(false);
+        }
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+          setOpen(false);
+          toggle.focus();
+        }
+      });
+
+      // Prevent scroll when menu is open on small screens (optional UX improvement)
+      const observer = new MutationObserver(() => {
+        if (menu.classList.contains('is-open')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      });
+      observer.observe(menu, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
+</body>
+</html>

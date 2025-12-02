@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Form Section</title>
+
+<style>
+    /* ------------------------------
+       Global Styles
+    ------------------------------ */
+    :root {
+        --primary: #4f46e5;
+        --primary-light: #eef2ff;
+        --text-dark: #111827;
+        --text-muted: #4b5563;
+        --radius: 12px;
+        --shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        --transition: 0.25s ease;
+        --bg-light: #f9fafb;
+    }
+
+    body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-light);
+        color: var(--text-dark);
+    }
+
+    /* ------------------------------
+       Contact Section
+    ------------------------------ */
+    .contact-section {
+        padding: 80px 7%;
+        text-align: center;
+    }
+
+    .contact-section h2 {
+        font-size: clamp(2rem, 4vw, 2.6rem);
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .contact-section p.subtitle {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        max-width: 600px;
+        margin: 0 auto 40px;
+    }
+
+    /* ------------------------------
+       Contact Form Container
+    ------------------------------ */
+    .contact-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 40px 35px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        text-align: left;
+    }
+
+    /* Form Grid (for desktop two-column) */
+    .form-grid {
+        display: grid;
+        gap: 20px;
+    }
+
+    @media (min-width: 700px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    /* Form Fields */
+    label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: block;
+        margin-bottom: 6px;
+        color: var(--text-dark);
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: var(--radius);
+        border: 1px solid #d1d5db;
+        font-size: 1rem;
+        resize: none;
+        background: #fff;
+        transition: var(--transition);
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+
+    textarea {
+        min-height: 140px;
+        grid-column: 1 / -1; /* full width on desktop */
+    }
+
+    /* Submit Button */
+    .submit-btn {
+        margin-top: 10px;
+        width: 100%;
+        padding: 15px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        grid-column: 1 / -1;
+    }
+
+    .submit-btn:hover {
+        background: #4338ca;
+    }
+</style>
+</head>
+
+<body>
+
+<section class="contact-section">
+    <h2>Get in Touch</h2>
+    <p class="subtitle">
+        Have a question, project idea, or collaboration request? Fill out the form and we’ll get back to you shortly.
+    </p>
+
+    <div class="contact-container">
+        <form>
+            <div class="form-grid">
+                
+                <!-- Name -->
+                <div>
+                    <label for="name">Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        placeholder="Enter your name" 
+                        required
+                    />
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter your email" 
+                        required
+                    />
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label for="message">Message</label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        placeholder="Write your message here..." 
+                        required
+                    ></textarea>
+                </div>
+
+                <!-- Button -->
+                <button type="submit" class="submit-btn">Send Message</button>
+
+            </div>
+        </form>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Hero Section</title>
+
+<style>
+    /* ------------------------------
+       Global Styles
+    ------------------------------ */
+    :root {
+        --bg-gradient: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        --text-dark: #111827;
+        --text-muted: #4b5563;
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --radius: 10px;
+        --transition: 0.25s ease;
+    }
+
+    body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-gradient);
+        color: var(--text-dark);
+    }
+
+    /* ------------------------------
+       Hero Section
+    ------------------------------ */
+    .hero {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 80px 7%;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        line-height: 1.2;
+        margin: 0 0 18px;
+        font-weight: 700;
+    }
+
+    .hero-text p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 28px;
+        max-width: 550px;
+    }
+
+    .cta-group {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 14px 26px;
+        border-radius: var(--radius);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-block;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: #fff;
+    }
+    .btn-primary:hover {
+        background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+    .btn-secondary:hover {
+        background: #eef2ff;
+    }
+
+    /* Image Styling */
+    .hero-img img {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        display: block;
+        border-radius: 14px;
+        object-fit: contain;
+    }
+
+    /* ------------------------------
+       Responsive
+    ------------------------------ */
+    @media (max-width: 900px) {
+        .hero {
+            grid-template-columns: 1fr;
+            text-align: center;
+            padding: 60px 7%;
+        }
+
+        .hero-text p {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-group {
+            justify-content: center;
+        }
+
+        .hero-img img {
+            margin: 20px auto 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>Build Stunning Web Experiences with Ease</h1>
+        <p>
+            Create beautiful, responsive interfaces effortlessly. Designed with modern UI/UX principles for clarity, consistency, and impact.
+        </p>
+
+        <div class="cta-group">
+            <a href="#" class="btn-primary">Get Started</a>
+            <a href="#" class="btn-secondary">Learn More</a>
+        </div>
+    </div>
+
+    <div class="hero-img">
+        <img src="https://via.placeholder.com/500x400.png?text=Hero+Image" alt="Illustration">
+    </div>
+</section>
+
+</body>
+</html>
